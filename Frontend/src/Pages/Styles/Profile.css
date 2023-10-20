@@ -1,0 +1,29 @@
+.SignIn-form:active{
+    background-color: lightgreen;
+}
+
+.SignUp-form:active{
+    background-color: lightpink;
+}
+
+.toggleForm{
+    display: flex;
+}
+
+.toggleForm > button{
+    margin: 1rem;
+}
+
+.ProfileContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 100vw;
+    height: 90vh;
+    justify-content: center;
+    align-items: center;
+}   
+
+.userEmail{
+    text-align: center;
+}

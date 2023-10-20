@@ -3,11 +3,23 @@ import "./styles/Navbar.css";
 import { logo_URL, user_icon_URL } from "../helpers/Constants";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../Firebase";
 
 function Navbar() {
   const navigate = useNavigate();
   const [isDropDownOpen, setIsDropDownOpen] = useState(true);
   const [isMobileView, setisMobileView] = useState(false);
+  const [User, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     function findMobileView() {
@@ -29,7 +41,7 @@ function Navbar() {
   }, []);
 
   const handleDropDown = () => {
-    if (window.innerWidth < 768) {
+    if (window.innerWidth <= 768) {
       setIsDropDownOpen(!isDropDownOpen);
     } else {
       navigate("/home");
@@ -46,7 +58,7 @@ function Navbar() {
         >
           <div className="logoIcon-Container">
             <img src={logo_URL} alt="logoIcon" className="logoIcon"></img>
-            <p className="logoText">QueryQuack</p>
+            <p className="logoText">Wassup</p>
           </div>
           {!isMobileView ? null : <div className="Hamburger">&#9776;</div>}
         </section>
@@ -56,11 +68,17 @@ function Navbar() {
           className="secondary-section"
         >
           <Link to={"/home"}>HOME</Link>
-          <Link to={"/signup"}>SIGNUP</Link>
-          <Link to={"/signin"}>SIGNIN</Link>
-          <Link className="userIcon-container ">
-            <img src={user_icon_URL} className="userIcon" alt="userIcon" />
-            <div className="userName">USER NAME</div>
+          <Link to={"/chat"}>CHAT</Link>
+
+          <Link className="userIcon-container" to={"/profile"}>
+            <img
+              src={User?.photoURL ? User.photoURL : user_icon_URL}
+              className="userIcon"
+              alt="userIcon"
+            />
+            <div className="userName">
+              PROFILE
+            </div>
           </Link>
         </section>
       </div>

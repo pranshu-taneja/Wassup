@@ -1,26 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../Firebase";
 import { useNavigate } from "react-router-dom";
+import Signin from "../components/Signin";
+import Signup from "../components/Signup";
+import "./Styles/Profile.css";
 
 function Profile() {
   const navigate = useNavigate();
-  const User = auth.currentUser;
+  const [User, setUser] = useState(null);
+  const [toggleSignInSignUp, setToggleSignInSignUp] = useState(false); //true -- signin    false --signup
 
-  // useEffect(() => {
-  //   setUser(auth.currentUser);
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const logout = async (e) => {
-    e.preventDefault();
-
-    await signOut(auth);
+    await auth.signOut();
+    window.location.reload();
     navigate("/");
   };
 
   return (
-    <div>
-      UserName: {User}
-      <button onClick={logout}>logout</button>
+    <div className="ProfileContainer">
+      <div className="userEmail">UserName: {User ? User.email : "No User"}</div>
+
+      <div className="SigninSignupButtons">
+        {User ? (
+          <button hidden={!User} onClick={logout}>
+            logout
+          </button>
+        ) : (
+          <div className="toggleForm">
+            <button
+              hidden={User}
+              className="SignUp-form"
+              onClick={() => {
+                setToggleSignInSignUp(false);
+              }}
+            >
+              New User?
+            </button>
+            <button
+              hidden={User}
+              className="SignIn-form"
+              onClick={() => {
+                setToggleSignInSignUp(true);
+              }}
+            >
+              Already A User?
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="SigninSingupForm">
+        {toggleSignInSignUp ? <Signin /> : <Signup />}
+      </div>
     </div>
   );
 }

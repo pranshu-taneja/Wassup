@@ -1,22 +1,23 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signin from "./Pages/Signin";
-import Signup from "./Pages/Signup";
+import { HashRouter, Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
 import Home from "./Pages/Home";
 import Profile from "./Pages/Profile";
+import Chat from "./Pages/Chat";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
+        <Navbar></Navbar>
         <Routes>
           <Route path="/" exact element={<Home />}></Route>
           <Route path="/home" exact element={<Home />}></Route>
-          <Route path="/signin" exact element={<Signin />}></Route>
-          <Route path="/signup" exact element={<Signup />}></Route>
+          <Route path="/chat" exact element={<Chat />}></Route>
           <Route path="/profile" exact element={<Profile />}></Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
